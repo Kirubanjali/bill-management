@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Management</title>
+</head>
+<body>
+    <div id="login-form">
+        <h2>Login Form</h2>
+        <label for="userid">User ID:</label>
+        <input type="text" id="userid" name="userid"><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone"><br>
+
+        <button type="button" onclick="validateLogin()">Login</button>
+    </div>
+
+    <div id="bill-management" style="display: none;">
+        <h2>Bill Management</h2>
+        <div id="menu-card">
+            <h3>Menu</h3>
+            <p><label for="dosa">Dosa:</label> <input type="text" id="dosa" name="dosa" value="0"> Rs. 60/plate</p>
+            <p><label for="cookies">Cookies:</label> <input type="text" id="cookies" name="cookies" value="0"> Rs. 30/plate</p>
+            <p><label for="tea">Tea:</label> <input type="text" id="tea" name="tea" value="0"> Rs. 10/cup</p>
+            <p><label for="coffee">Coffee:</label> <input type="text" id="coffee" name="coffee" value="0"> Rs. 30/cup</p>
+            <p><label for="juice">Juice:</label> <input type="text" id="juice" name="juice" value="0"> Rs. 30/glass</p>
+            <p><label for="pancakes">Pancakes:</label> <input type="text" id="pancakes" name="pancakes" value="0"> Rs. 20/pack</p>
+            <p><label for="puffs">Puffs:</label> <input type="text" id="puffs" name="puffs" value="0"> Rs. 30/pack</p>
+        </div>
+
+        <div id="bill">
+            <h3>Bill</h3>
+            <label for="total">Total Bill:</label>
+            <input type="text" id="total" readonly><br>
+            
+            <button type="button" onclick="calculateTotal()">Calculate Total</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function validateLogin() {
+            var userid = document.getElementById("userid").value;
+            var password = document.getElementById("password").value;
+            var phone = document.getElementById("phone").value;
+
+            // Add your validation logic here
+
+            // For demonstration, just showing the bill management section
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("bill-management").style.display = "block";
+        }
+
+        function calculateTotal() {
+            var dosaQty = parseInt(document.getElementById("dosa").value);
+            var cookiesQty = parseInt(document.getElementById("cookies").value);
+            var teaQty = parseInt(document.getElementById("tea").value);
+            var coffeeQty = parseInt(document.getElementById("coffee").value);
+            var juiceQty = parseInt(document.getElementById("juice").value);
+            var pancakesQty = parseInt(document.getElementById("pancakes").value);
+            var puffsQty = parseInt(document.getElementById("puffs").value);
+
+            var dosaCost = 60 * dosaQty;
+            var cookiesCost = 30 * cookiesQty;
+            var teaCost = 10 * teaQty;
+            var coffeeCost = 30 * coffeeQty;
+            var juiceCost = 30 * juiceQty;
+            var pancakesCost = 20 * pancakesQty;
+            var puffsCost = 30 * puffsQty;
+
+            var totalBill = dosaCost + cookiesCost + teaCost + coffeeCost + juiceCost + pancakesCost + puffsCost;
+
+            document.getElementById("total").value = "Rs. " + totalBill.toFixed(2);
+
+            // Send SMS
+            sendSMS(totalBill);
+        }
+
+        function sendSMS(totalBill) {
+            var phone = document.getElementById("phone").value;
+            $.ajax({
+                url: 'send_sms.php', // Assuming PHP script for sending SMS
+                type: 'POST',
+                data: { phone: phone, totalBill: totalBill },
+                success: function(response) {
+                    console.log('SMS sent successfully.');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error sending SMS:', error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
